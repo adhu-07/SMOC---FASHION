@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMOC | SELF MADE OWN COLD</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Custom Aesthetics */
+        :root {
+            --bg-black: #050505;
+            --text-white: #f5f5f5;
+            --accent-gray: #1a1a1a;
+            --highlight: #333;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .brand-font {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 3D Card Effect */
+        .product-card {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-style: preserve-3d;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        /* Glitch Animation for Logo */
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+        .glitch-hover:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        .modal-enter {
+            animation: fadeUp 0.3s ease-out forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Float Animation for Gallery */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Sound Wave Animation */
+        @keyframes wave {
+            0% { transform: scale(0.8); opacity: 0.5; border-width: 1px; }
+            100% { transform: scale(1.5); opacity: 0; border-width: 0px; }
+        }
+        .sound-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: wave 3s infinite linear;
+        }
+        .sound-ring:nth-child(2) { animation-delay: 1s; }
+        .sound-ring:nth-child(3) { animation-delay: 2s; }
+
+        /* Slow Spin Animation (Fix 4) */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 cursor-pointer glitch-hover" onclick="window.scrollTo(0,0)">
+                    <span class="brand-font text-2xl font-bold tracking-widest text-white">SMOC</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#products" class="hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium tracking-wide">COLLECTION</a>
+                        <a href="#gallery" class="hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium tracking-wide">GALLERY</a>
+                        <a href="#protocol" class="hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium tracking-wide">PROTOCOL</a>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="toggleCart()" class="relative p-2 text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                        <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-black transform translate-x-1/4 -translate-y-1/4 bg-white rounded-full opacity-0 transition-opacity">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Unicorn Studio Embed -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        
+        <!-- Unicorn Studio Embed Container -->
+        <!-- We use absolute positioning to place it behind the text -->
+        <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+            <!-- Your Unicorn Studio Code -->
+            <div data-us-project="VzxADAYgauFfdGKiTIE9" style="width: 100%; height: 100%; min-width: 100vw; min-height: 100vh;"></div>
+        </div>
+
+        <!-- Gradient Overlay -->
+        <!-- Adds a subtle fade so text remains readable against the 3D scene -->
+        <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-black/40"></div>
+        
+        <!-- Text Content -->
+        <div class="relative z-20 text-center px-4">
+            <h1 class="text-7xl md:text-9xl font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">
+                SELF MADE
+            </h1>
+            <p class="text-xl md:text-2xl tracking-[0.5em] text-gray-300 mb-12 brand-font uppercase drop-shadow-lg">
+                Own the Cold
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#products" class="px-8 py-3 bg-white text-black font-bold tracking-widest hover:bg-gray-300 transition-colors uppercase brand-font shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                    Shop Drop
+                </a>
+                <a href="#gallery" class="px-8 py-3 border border-white/50 text-white font-bold tracking-widest hover:bg-white/10 transition-colors uppercase brand-font backdrop-blur-sm">
+                    View Gallery
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Filters (Fix 2: Added data-category attributes) -->
+        <div class="flex flex-wrap gap-4 mb-16 justify-center md:justify-start sticky top-16 z-40 py-4 bg-[#050505]/95 backdrop-blur">
+            <button data-category="all" onclick="filterProducts('all')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-white text-black border border-white">ALL</button>
+            <button data-category="TS" onclick="filterProducts('TS')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">TEES</button>
+            <button data-category="CH" onclick="filterProducts('CH')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">CHAINS</button>
+            <button data-category="RG" onclick="filterProducts('RG')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">RINGS</button>
+            <button data-category="CP" onclick="filterProducts('CP')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">CAPS</button>
+        </div>
+
+        <!-- Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-8">
+            <!-- Items injected by JS -->
+        </div>
+    </section>
+
+    <!-- Dark Mode Motion Gallery -->
+    <section id="gallery" class="bg-[#020202] relative">
+        <div class="sticky top-0 z-30 text-center pointer-events-none mix-blend-difference pt-12">
+            <h2 class="brand-font text-5xl md:text-7xl text-white opacity-20 tracking-[0.5em] uppercase">Archive</h2>
+        </div>
+
+        <!-- Gallery Item 1: Tee -->
+        <div class="gallery-item min-h-screen flex items-center justify-center relative border-b border-white/5">
+            <!-- Spotlight Background -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_50%)] opacity-0 transition-opacity duration-1000 spotlight"></div>
+            
+            <div class="relative z-10 text-center transform translate-y-10 opacity-0 transition-all duration-1000 item-content">
+                <div class="relative inline-block mb-8">
+                    <div class="w-64 h-80 md:w-80 md:h-96 bg-[#0a0a0a] rounded-sm flex items-center justify-center animate-float shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+                         <img src="https://placehold.co/400x500/111/fff?text=ICE-TEE" class="max-w-[80%] max-h-[80%] object-contain drop-shadow-2xl">
+                    </div>
+                </div>
+                <h3 class="brand-font text-3xl tracking-widest mb-2">ICE TEE 01</h3>
+                <p class="font-mono text-xs text-gray-500 tracking-widest">HEAVYWEIGHT COTTON / PUFF PRINT</p>
+            </div>
+        </div>
+
+        <!-- Gallery Item 2: Chain (With Sound Visualizer) -->
+        <div class="gallery-item min-h-screen flex items-center justify-center relative border-b border-white/5">
+             <!-- Spotlight Background -->
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_50%)] opacity-0 transition-opacity duration-1000 spotlight"></div>
+             
+             <!-- Visualizer Rings -->
+             <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-1000 spotlight pointer-events-none">
+                 <div class="sound-ring"></div>
+                 <div class="sound-ring"></div>
+                 <div class="sound-ring"></div>
+             </div>
+
+             <div class="relative z-10 text-center transform translate-y-10 opacity-0 transition-all duration-1000 item-content">
+                <div class="relative inline-block mb-8">
+                    <div class="w-64 h-64 bg-transparent flex items-center justify-center animate-float">
+                         <!-- Using a circle for the chain placeholder -->
+                         <!-- Fix 4: animate-spin-slow now works due to CSS fix -->
+                         <div class="w-48 h-48 rounded-full border-[10px] border-gray-400 border-dashed animate-spin-slow flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                             <span class="text-white text-xs font-mono">LINK-01</span>
+                         </div>
+                    </div>
+                </div>
+                <h3 class="brand-font text-3xl tracking-widest mb-2">VERTEBRAE LINK</h3>
+                <p class="font-mono text-xs text-gray-500 tracking-widest">STAINLESS STEEL / NO FADE</p>
+            </div>
+        </div>
+
+        <!-- Gallery Item 3: Ring -->
+        <div class="gallery-item min-h-screen flex items-center justify-center relative">
+             <!-- Spotlight Background -->
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_50%)] opacity-0 transition-opacity duration-1000 spotlight"></div>
+
+             <div class="relative z-10 text-center transform translate-y-10 opacity-0 transition-all duration-1000 item-content">
+                <div class="relative inline-block mb-8">
+                    <div class="w-40 h-40 bg-[#0a0a0a] rounded-full flex items-center justify-center animate-float border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+                         <div class="w-20 h-20 border-[4px] border-gray-300 rounded-full"></div>
+                    </div>
+                </div>
+                <h3 class="brand-font text-3xl tracking-widest mb-2">CHROME RING</h3>
+                <p class="font-mono text-xs text-gray-500 tracking-widest">POLISHED FINISH / SIZE 8</p>
+                
+                <div class="mt-8">
+                    <a href="#products" class="px-8 py-3 bg-white text-black font-bold tracking-widest hover:bg-gray-300 transition-colors uppercase brand-font text-sm">
+                        Shop Collection
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Acquisition Protocol Section -->
+    <section id="protocol" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-[#050505]">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <!-- Left Column -->
+            <div class="opacity-0 translate-y-10 transition-all duration-700 delay-100 protocol-item">
+                <h2 class="brand-font text-5xl md:text-6xl mb-4 leading-none text-white tracking-tight">ACQUISITION<br>PROTOCOL</h2>
+                <div class="w-12 h-0.5 bg-white mb-6"></div>
+                <p class="font-mono text-gray-500 text-xs md:text-sm tracking-widest uppercase">How gear moves from us to you.<br>No fluff.</p>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-12">
+                <!-- Step 1 -->
+                <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-200 protocol-item">
+                    <span class="font-mono text-gray-600 text-sm pt-1">01</span>
+                    <div>
+                        <h3 class="brand-font text-2xl text-white mb-2 tracking-wide">SELECT GEAR</h3>
+                        <p class="font-mono text-gray-400 text-xs md:text-sm">Add only what serves you to your SELECTION.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-300 protocol-item">
+                    <span class="font-mono text-gray-600 text-sm pt-1">02</span>
+                    <div>
+                        <h3 class="brand-font text-2xl text-white mb-2 tracking-wide">GENERATE COLD CODE</h3>
+                        <p class="font-mono text-gray-400 text-xs md:text-sm">Your selection builds an encrypted string in the cart.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-400 protocol-item">
+                    <span class="font-mono text-gray-600 text-sm pt-1">03</span>
+                    <div>
+                        <h3 class="brand-font text-2xl text-white mb-2 tracking-wide">TRANSMIT VIA INSTAGRAM DM</h3>
+                        <p class="font-mono text-gray-400 text-xs md:text-sm">Copy the code. Send it to <span class="text-white">@smoc_co</span>. No extra text.</p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-500 protocol-item">
+                    <span class="font-mono text-gray-600 text-sm pt-1">04</span>
+                    <div>
+                        <h3 class="brand-font text-2xl text-white mb-2 tracking-wide">CONFIRMATION & DISPATCH</h3>
+                        <p class="font-mono text-gray-400 text-xs md:text-sm">We verify, send payment details, then move the package.</p>
+                    </div>
+                </div>
+                
+                <div class="opacity-0 translate-y-10 transition-all duration-700 delay-700 protocol-item pt-8 border-t border-white/5">
+                    <p class="font-mono text-[10px] text-gray-600 uppercase tracking-wider">Split shipments may occur. Read terms before execution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about" class="border-t border-white/10 bg-black py-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <h2 class="brand-font text-2xl font-bold">SMOC</h2>
+                <p class="text-xs text-gray-500 mt-1">© 2025 SELF MADE. ALL RIGHTS RESERVED.</p>
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="text-gray-400 hover:text-white text-sm tracking-wide">INSTAGRAM</a>
+                <!-- Updated Terms Trigger -->
+                <button onclick="toggleTerms()" class="text-gray-400 hover:text-white text-sm tracking-wide uppercase">Terms & Conditions</button>
+                <a href="#" class="text-gray-400 hover:text-white text-sm tracking-wide">RETURN POLICY</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart / Code Generator Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleCart()"></div>
+        <div class="absolute right-0 top-0 h-full w-full md:w-[500px] bg-[#0a0a0a] border-l border-white/10 shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-full" id="cart-panel">
+            
+            <!-- Cart Header -->
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#0a0a0a]">
+                <h2 class="brand-font text-2xl tracking-widest">SELECTION</h2>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Cart items injected here -->
+                <div class="text-center text-gray-600 mt-20 font-mono text-sm">
+                    SELECTION EMPTY.<br>INITIATE BROWSING.
+                </div>
+            </div>
+
+            <!-- Code Generation Area -->
+            <div class="p-6 bg-[#050505] border-t border-white/10">
+                <div id="checkout-actions" class="hidden">
+                    <div class="mb-4">
+                        <label class="block text-xs font-mono text-gray-500 mb-2">ORDER STRING GENERATED:</label>
+                        <div class="relative">
+                            <input type="text" id="order-code-input" readonly class="w-full bg-[#111] border border-white/20 text-green-500 font-mono text-sm p-3 focus:outline-none focus:border-white/50 rounded-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Fix 3: Passed 'this' to onclick -->
+                        <button onclick="copyCode(this)" class="py-3 border border-white/30 text-white font-bold text-sm hover:bg-white/10 tracking-wider">
+                            COPY CODE
+                        </button>
+                        <button onclick="openInstagram()" class="py-3 bg-white text-black font-bold text-sm hover:bg-gray-200 tracking-wider">
+                            DM ON IG
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-3 text-center">
+                        STEP 1: COPY CODE &nbsp;|&nbsp; STEP 2: PASTE IN DM
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms & Conditions Modal -->
+    <div id="terms-modal" class="fixed inset-0 z-[70] hidden">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="toggleTerms()"></div>
+        <div class="absolute bottom-0 left-0 right-0 h-[85vh] bg-[#0a0a0a] border-t border-white/10 shadow-2xl flex flex-col transform transition-transform duration-500 translate-y-full rounded-t-xl overflow-hidden" id="terms-panel">
+            
+            <!-- Terms Header -->
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#0a0a0a] shrink-0">
+                <div>
+                    <h2 class="brand-font text-2xl tracking-widest text-white">TERMS & CONDITIONS</h2>
+                    <p class="font-mono text-[10px] text-gray-500 uppercase mt-1">Last Updated: 09 Dec 2025 | Jurisdiction: India</p>
+                </div>
+                <button onclick="toggleTerms()" class="text-gray-400 hover:text-white px-4 py-2 border border-white/20 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-colors">
+                    CLOSE PROTOCOL
+                </button>
+            </div>
+
+            <!-- Terms Content -->
+            <div class="flex-1 overflow-y-auto p-6 md:p-12 space-y-10 text-gray-300 font-mono text-sm leading-relaxed max-w-4xl mx-auto w-full">
+                
+                <!-- Section 1 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">1. BUSINESS MODEL NOTICE</h3>
+                    <p class="text-gray-400">SMOC is a made-on-demand and reseller-linked brand.<br>Orders may ship separately depending on product source.</p>
+                </div>
+
+                <!-- Section 2 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">2. ORDERING PROTOCOL</h3>
+                    <p class="text-gray-400">Orders are initiated exclusively via Instagram DM with a Cold Code.<br>
+                    - We may accept or refuse any order before payment.<br>
+                    - No contract exists until payment is confirmed.</p>
+                </div>
+
+                <!-- Section 3 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">3. PRICING & PAYMENT</h3>
+                    <p class="text-gray-400">Prices may change at any time before confirmation.<br>
+                    Payment must be completed within the timeframe provided.<br>
+                    Once paid → order is locked.</p>
+                </div>
+
+                <!-- Section 4 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">4. SHIPPING</h3>
+                    <p class="text-gray-400">Delivery timelines are estimates only.<br>
+                    Delays outside our control do not qualify for refunds.<br>
+                    Risk transfers to customer once handed to courier.</p>
+                </div>
+
+                <!-- Section 5 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">5. PRODUCT VARIATIONS</h3>
+                    <p class="text-gray-400">Due to multiple suppliers and batch variation:<br>
+                    - Color/finish differences<br>
+                    - Print scale differences<br>
+                    - Minor measurement variance<br>
+                    These are not considered defects.</p>
+                </div>
+
+                <!-- Section 6 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">6. STRICT NO-RETURN POLICY</h3>
+                    <p class="text-gray-400">We do not accept returns for:<br>
+                    - Size or fit issues<br>
+                    - Change of mind<br>
+                    - Style preference<br>
+                    - Delays in shipping<br>
+                    - Normal wear or plating change</p>
+                    <p class="text-gray-400 mt-2">Only exception required by law:<br>
+                    - Wrong item received<br>
+                    - Proven manufacturing defect reported within 24 hours (With full unboxing video as proof)</p>
+                    <p class="text-white mt-2">If approved → replacement only. Refunds are not offered.</p>
+                </div>
+
+                <!-- Section 7 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">7. EXCHANGES</h3>
+                    <p class="text-gray-400">Not provided. Each order is final once confirmed.</p>
+                </div>
+
+                <!-- Section 8 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">8. PRODUCT CARE RESPONSIBILITY</h3>
+                    <p class="text-gray-400">Customer must maintain chains and metal wear properly.<br>
+                    Damage from use is not covered.</p>
+                </div>
+
+                <!-- Section 9 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">9. CONDUCT</h3>
+                    <p class="text-gray-400">Abusive behavior towards our support results in refusal of service.</p>
+                </div>
+
+                <!-- Section 10 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">10. PRIVACY</h3>
+                    <p class="text-gray-400">We only use your DM details to process and ship orders.<br>
+                    No data is sold.</p>
+                </div>
+
+                <!-- Section 11 -->
+                <div>
+                    <h3 class="brand-font text-lg text-white mb-2">11. POLICY CHANGES</h3>
+                    <p class="text-gray-400">Terms may be updated any time.<br>
+                    The version active at payment confirmation applies.</p>
+                </div>
+
+                <div class="pt-8 border-t border-white/10 text-center">
+                    <p class="text-xs text-gray-600 uppercase">SMOC OPERATIONS © 2025</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-6 py-3 text-sm font-bold tracking-widest opacity-0 pointer-events-none transition-opacity duration-300 z-[70]">
+        ITEM ADDED
+    </div>
+
+    <!-- Unicorn Studio Script -->
+    <script type="text/javascript">
+        !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.2/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+    </script>
+
+    <script>
+        // --- 1. CONFIG & DATA ---
+        
+        // Correct Instagram Handle
+        const IG_USERNAME = "smoc_co"; 
+        
+        // Generating Product Data (as requested: 5 tees, 8 chains, 5 rings, 6 caps)
+        const products = [];
+        
+        function createProducts(category, count, namePrefix, price, hasSize) {
+            for(let i=1; i<=count; i++) {
+                let idNum = i.toString().padStart(2, '0');
+                products.push({
+                    id: `${category}-${idNum}`,
+                    category: category,
+                    name: `${namePrefix} ${idNum}`,
+                    price: price,
+                    image: `https://placehold.co/400x500/111/fff?text=${category}-${idNum}`, // Placeholder
+                    hasSize: hasSize
+                });
+            }
+        }
+
+        // Fix 5: Updated Prices to Realistic Range (₹499 - ₹799)
+        // Fix 1: Rings now have hasSize: false to trigger the specific ring logic
+        createProducts('TS', 5, 'ICE TEE', 699, true);   
+        createProducts('CH', 8, 'LINK CHAIN', 799, false); 
+        createProducts('RG', 5, 'CHROME RING', 499, false);  
+        createProducts('CP', 6, 'STEALTH CAP', 599, false); 
+
+        // --- 2. STATE MANAGEMENT ---
+        let cart = [];
+
+        // --- 3. RENDER FUNCTIONS ---
+        
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Render Grid
+        const grid = document.getElementById('product-grid');
+        
+        function renderProducts(filter = 'all') {
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' 
+                ? products 
+                : products.filter(p => p.category === filter);
+
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card group relative bg-[#0a0a0a] border border-white/5';
+                
+                // Size selector HTML if needed
+                let sizeHtml = '';
+                if(product.hasSize) {
+                    // Standard sizes for Tees/Caps if applicable
+                    sizeHtml = `
+                        <select id="size-${product.id}" class="bg-black text-white text-xs border border-white/30 p-1 mb-2 outline-none w-full">
+                            <option value="S">SIZE: S</option>
+                            <option value="M" selected>SIZE: M</option>
+                            <option value="L">SIZE: L</option>
+                            <option value="XL">SIZE: XL</option>
+                        </select>
+                    `;
+                } else if (product.category === 'RG') {
+                    // Fix 1: Specific Ring Sizes now trigger because hasSize is false
+                     sizeHtml = `
+                        <select id="size-${product.id}" class="bg-black text-white text-xs border border-white/30 p-1 mb-2 outline-none w-full">
+                            <option value="6">SIZE: 6</option>
+                            <option value="7">SIZE: 7</option>
+                            <option value="8" selected>SIZE: 8</option>
+                            <option value="9">SIZE: 9</option>
+                        </select>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="aspect-[4/5] overflow-hidden bg-[#111] relative">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0">
+                        <div class="absolute top-2 right-2 bg-black/80 px-2 py-1 text-[10px] font-mono border border-white/20">
+                            ${product.id}
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="brand-font text-lg leading-none">${product.name}</h3>
+                            <span class="font-mono text-sm text-gray-400">₹${product.price}</span>
+                        </div>
+                        ${sizeHtml}
+                        <button onclick="addToCart('${product.id}')" class="w-full mt-2 py-3 bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-colors text-xs font-bold tracking-widest uppercase">
+                            Add to Selection
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Render Cart
+        function renderCart() {
+            const cartContainer = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const checkoutActions = document.getElementById('checkout-actions');
+            const orderInput = document.getElementById('order-code-input');
+
+            // Update Badge
+            if(cart.length > 0) {
+                cartCount.innerText = cart.length;
+                cartCount.classList.remove('opacity-0');
+            } else {
+                cartCount.classList.add('opacity-0');
+            }
+
+            // Render Items
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                     <div class="text-center text-gray-600 mt-20 font-mono text-sm">
+                        SELECTION EMPTY.<br>INITIATE BROWSING.
+                    </div>
+                `;
+                checkoutActions.classList.add('hidden');
+                return;
+            }
+
+            checkoutActions.classList.remove('hidden');
+            cartContainer.innerHTML = '';
+            
+            // Build the string: "TS-01:M, CH-02, RG-01:8"
+            let codeParts = [];
+
+            cart.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center bg-[#111] p-3 border border-white/10 modal-enter';
+                div.style.animationDelay = `${index * 50}ms`;
+                
+                let detailStr = item.id;
+                if(item.size) detailStr += `:${item.size}`;
+                codeParts.push(detailStr);
+
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                         <div class="w-12 h-12 bg-gray-800 bg-cover" style="background-image: url('${item.image}')"></div>
+                         <div>
+                            <div class="brand-font text-sm">${item.name}</div>
+                            <div class="font-mono text-xs text-gray-500">${item.size ? 'SIZE: '+item.size : 'STD'}</div>
+                         </div>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="text-gray-500 hover:text-red-500">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                `;
+                cartContainer.appendChild(div);
+            });
+
+            // Update the Generated Code String
+            // Format: SMOC | ID:SIZE, ID, ID:SIZE | @USER
+            const finalCode = `SMOC ORDER | ${codeParts.join(' + ')}`;
+            orderInput.value = finalCode;
+            
+            // Re-init icons for new elements
+            lucide.createIcons();
+        }
+
+        // --- 4. INTERACTIONS ---
+
+        // Fix 2: Updated Filter Logic using data-category
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const btnCat = btn.getAttribute('data-category');
+                // Active state check
+                if (btnCat === category) {
+                     btn.classList.add('bg-white', 'text-black');
+                     btn.classList.remove('bg-transparent', 'text-gray-400');
+                } else {
+                     btn.classList.remove('bg-white', 'text-black');
+                     btn.classList.add('bg-transparent', 'text-gray-400');
+                }
+            });
+            renderProducts(category);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            let size = null;
+            
+            // Check for size selector
+            const sizeSelector = document.getElementById(`size-${productId}`);
+            if(sizeSelector) {
+                size = sizeSelector.value;
+            }
+
+            cart.push({
+                ...product,
+                size: size,
+                cartId: Date.now() // Unique ID for removal
+            });
+
+            renderCart();
+            showToast(`ADDED: ${product.id}`);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            const panel = document.getElementById('cart-panel');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                // Small timeout to allow transition to render
+                setTimeout(() => {
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function toggleTerms() {
+            const modal = document.getElementById('terms-modal');
+            const panel = document.getElementById('terms-panel');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                // Small timeout to allow transition to render
+                setTimeout(() => {
+                    panel.classList.remove('translate-y-full');
+                }, 10);
+            } else {
+                panel.classList.add('translate-y-full');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 500);
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+        }
+
+        // --- 5. CHECKOUT LOGIC ---
+
+        // Fix 3: Updated to accept 'buttonEl' (this) instead of relying on global event
+        function copyCode(buttonEl) {
+            const codeInput = document.getElementById('order-code-input');
+            codeInput.select();
+            codeInput.setSelectionRange(0, 99999); // Mobile
+            navigator.clipboard.writeText(codeInput.value);
+            
+            const originalText = buttonEl.innerText;
+            buttonEl.innerText = "COPIED!";
+            buttonEl.classList.add('bg-green-500', 'border-green-500');
+            
+            setTimeout(() => {
+                buttonEl.innerText = originalText;
+                buttonEl.classList.remove('bg-green-500', 'border-green-500');
+            }, 2000);
+        }
+
+        function openInstagram() {
+            const code = document.getElementById('order-code-input').value;
+            // Trying to copy before opening
+            navigator.clipboard.writeText(code).then(() => {
+                // Determine URL based on device (Mobile Deep Link vs Web)
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const url = isMobile 
+                    ? `instagram://user?username=${IG_USERNAME}` // Tries to open app profile
+                    : `https://ig.me/m/${IG_USERNAME}`; // Direct message link web
+                
+                window.open(url, '_blank');
+            });
+        }
+
+        // --- INIT ---
+        renderProducts();
+        
+        // Add scroll animation observer for Product Grid, Gallery AND Protocol Items
+        const observerOptions = { threshold: 0.2 }; // Trigger when 20% visible
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Standard fade-up
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    
+                    // Specific logic for Gallery Spotlights
+                    if (entry.target.classList.contains('gallery-item')) {
+                        // Find child elements to animate
+                        const spotlight = entry.target.querySelector('.spotlight');
+                        const content = entry.target.querySelector('.item-content');
+                        
+                        if (spotlight) spotlight.classList.remove('opacity-0');
+                        if (content) {
+                            content.classList.remove('opacity-0', 'translate-y-10');
+                            content.classList.add('translate-y-0');
+                        }
+                    }
+                } else {
+                    // Optional: Fade out when leaving viewport for "Lens" effect
+                    if (entry.target.classList.contains('gallery-item')) {
+                         const spotlight = entry.target.querySelector('.spotlight');
+                         if(spotlight) spotlight.classList.add('opacity-0');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe Gallery Items and Protocol Items
+        document.querySelectorAll('.gallery-item, .protocol-item').forEach(item => observer.observe(item));
+
+    </script>
+</body>
+</html>
