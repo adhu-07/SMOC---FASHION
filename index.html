@@ -43,9 +43,11 @@
             transform-style: preserve-3d;
         }
         
-        .product-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            z-index: 10;
+        @media (min-width: 768px) {
+            .product-card:hover {
+                transform: translateY(-5px) scale(1.01);
+                z-index: 10;
+            }
         }
 
         /* Custom Scrollbar */
@@ -109,13 +111,22 @@
         .sound-ring:nth-child(2) { animation-delay: 1s; }
         .sound-ring:nth-child(3) { animation-delay: 2s; }
 
-        /* Slow Spin Animation (Fix 4) */
+        /* Slow Spin Animation */
         @keyframes spin-slow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
         .animate-spin-slow {
             animation: spin-slow 8s linear infinite;
+        }
+        
+        /* Custom Select Styling */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 0.5em auto;
         }
     </style>
 </head>
@@ -145,29 +156,24 @@
         </div>
     </nav>
 
-    <!-- Hero Section with Unicorn Studio Embed -->
+    <!-- Hero Section (WebGL Liquid Glass) -->
     <section class="relative h-screen flex items-center justify-center overflow-hidden bg-black">
         
-        <!-- Unicorn Studio Embed Container -->
-        <!-- We use absolute positioning to place it behind the text -->
-        <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-            <!-- Your Unicorn Studio Code -->
-            <div data-us-project="VzxADAYgauFfdGKiTIE9" style="width: 100%; height: 100%; min-width: 100vw; min-height: 100vh;"></div>
-        </div>
+        <!-- WebGL Canvas -->
+        <canvas id="hero-canvas" class="absolute inset-0 w-full h-full z-0"></canvas>
 
-        <!-- Gradient Overlay -->
-        <!-- Adds a subtle fade so text remains readable against the 3D scene -->
-        <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-black/40"></div>
+        <!-- Gradient Overlay (Lightened slightly to show liquid) -->
+        <div class="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-transparent pointer-events-none"></div>
         
         <!-- Text Content -->
-        <div class="relative z-20 text-center px-4">
+        <div class="relative z-20 text-center px-4 pointer-events-none">
             <h1 class="text-7xl md:text-9xl font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">
                 SELF MADE
             </h1>
             <p class="text-xl md:text-2xl tracking-[0.5em] text-gray-300 mb-12 brand-font uppercase drop-shadow-lg">
                 Own the Cold
             </p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <div class="flex flex-col md:flex-row gap-4 justify-center pointer-events-auto">
                 <a href="#products" class="px-8 py-3 bg-white text-black font-bold tracking-widest hover:bg-gray-300 transition-colors uppercase brand-font shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                     Shop Drop
                 </a>
@@ -181,17 +187,17 @@
     <!-- Products Section -->
     <section id="products" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Filters (Fix 2: Added data-category attributes) -->
-        <div class="flex flex-wrap gap-4 mb-16 justify-center md:justify-start sticky top-16 z-40 py-4 bg-[#050505]/95 backdrop-blur">
-            <button data-category="all" onclick="filterProducts('all')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-white text-black border border-white">ALL</button>
-            <button data-category="TS" onclick="filterProducts('TS')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">TEES</button>
-            <button data-category="CH" onclick="filterProducts('CH')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">CHAINS</button>
-            <button data-category="RG" onclick="filterProducts('RG')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">RINGS</button>
-            <button data-category="CP" onclick="filterProducts('CP')" class="filter-btn text-sm font-bold tracking-widest px-4 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">CAPS</button>
+        <!-- Filters (Active State Fix Included) -->
+        <div class="flex flex-wrap gap-2 md:gap-4 mb-12 justify-center md:justify-start sticky top-16 z-40 py-4 bg-[#050505]/95 backdrop-blur">
+            <button data-category="all" onclick="filterProducts('all')" class="filter-btn text-xs md:text-sm font-bold tracking-widest px-3 py-2 bg-white text-black border border-white">ALL</button>
+            <button data-category="TS" onclick="filterProducts('TS')" class="filter-btn text-xs md:text-sm font-bold tracking-widest px-3 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">TEES</button>
+            <button data-category="CH" onclick="filterProducts('CH')" class="filter-btn text-xs md:text-sm font-bold tracking-widest px-3 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">CHAINS</button>
+            <button data-category="RG" onclick="filterProducts('RG')" class="filter-btn text-xs md:text-sm font-bold tracking-widest px-3 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">RINGS</button>
+            <button data-category="CP" onclick="filterProducts('CP')" class="filter-btn text-xs md:text-sm font-bold tracking-widest px-3 py-2 bg-transparent text-gray-400 hover:text-white border border-transparent hover:border-white/30 transition-all">CAPS</button>
         </div>
 
-        <!-- Grid -->
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-12 gap-x-8">
+        <!-- Compact Grid (2 Columns on Mobile, Tight Gap) -->
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-x-8 md:gap-y-12">
             <!-- Items injected by JS -->
         </div>
     </section>
@@ -204,9 +210,7 @@
 
         <!-- Gallery Item 1: Tee -->
         <div class="gallery-item min-h-screen flex items-center justify-center relative border-b border-white/5">
-            <!-- Spotlight Background -->
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_50%)] opacity-0 transition-opacity duration-1000 spotlight"></div>
-            
             <div class="relative z-10 text-center transform translate-y-10 opacity-0 transition-all duration-1000 item-content">
                 <div class="relative inline-block mb-8">
                     <div class="w-64 h-80 md:w-80 md:h-96 bg-[#0a0a0a] rounded-sm flex items-center justify-center animate-float shadow-[0_0_50px_rgba(0,0,0,0.8)]">
@@ -218,23 +222,16 @@
             </div>
         </div>
 
-        <!-- Gallery Item 2: Chain (With Sound Visualizer) -->
+        <!-- Gallery Item 2: Chain -->
         <div class="gallery-item min-h-screen flex items-center justify-center relative border-b border-white/5">
-             <!-- Spotlight Background -->
              <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_50%)] opacity-0 transition-opacity duration-1000 spotlight"></div>
-             
-             <!-- Visualizer Rings -->
              <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-1000 spotlight pointer-events-none">
                  <div class="sound-ring"></div>
                  <div class="sound-ring"></div>
-                 <div class="sound-ring"></div>
              </div>
-
              <div class="relative z-10 text-center transform translate-y-10 opacity-0 transition-all duration-1000 item-content">
                 <div class="relative inline-block mb-8">
                     <div class="w-64 h-64 bg-transparent flex items-center justify-center animate-float">
-                         <!-- Using a circle for the chain placeholder -->
-                         <!-- Fix 4: animate-spin-slow now works due to CSS fix -->
                          <div class="w-48 h-48 rounded-full border-[10px] border-gray-400 border-dashed animate-spin-slow flex items-center justify-center bg-black/50 backdrop-blur-sm">
                              <span class="text-white text-xs font-mono">LINK-01</span>
                          </div>
@@ -247,9 +244,7 @@
 
         <!-- Gallery Item 3: Ring -->
         <div class="gallery-item min-h-screen flex items-center justify-center relative">
-             <!-- Spotlight Background -->
              <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_50%)] opacity-0 transition-opacity duration-1000 spotlight"></div>
-
              <div class="relative z-10 text-center transform translate-y-10 opacity-0 transition-all duration-1000 item-content">
                 <div class="relative inline-block mb-8">
                     <div class="w-40 h-40 bg-[#0a0a0a] rounded-full flex items-center justify-center animate-float border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
@@ -258,7 +253,6 @@
                 </div>
                 <h3 class="brand-font text-3xl tracking-widest mb-2">CHROME RING</h3>
                 <p class="font-mono text-xs text-gray-500 tracking-widest">POLISHED FINISH / SIZE 8</p>
-                
                 <div class="mt-8">
                     <a href="#products" class="px-8 py-3 bg-white text-black font-bold tracking-widest hover:bg-gray-300 transition-colors uppercase brand-font text-sm">
                         Shop Collection
@@ -271,16 +265,12 @@
     <!-- Acquisition Protocol Section -->
     <section id="protocol" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-white/10 bg-[#050505]">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            <!-- Left Column -->
             <div class="opacity-0 translate-y-10 transition-all duration-700 delay-100 protocol-item">
                 <h2 class="brand-font text-5xl md:text-6xl mb-4 leading-none text-white tracking-tight">ACQUISITION<br>PROTOCOL</h2>
                 <div class="w-12 h-0.5 bg-white mb-6"></div>
                 <p class="font-mono text-gray-500 text-xs md:text-sm tracking-widest uppercase">How gear moves from us to you.<br>No fluff.</p>
             </div>
-
-            <!-- Right Column -->
             <div class="space-y-12">
-                <!-- Step 1 -->
                 <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-200 protocol-item">
                     <span class="font-mono text-gray-600 text-sm pt-1">01</span>
                     <div>
@@ -288,7 +278,6 @@
                         <p class="font-mono text-gray-400 text-xs md:text-sm">Add only what serves you to your SELECTION.</p>
                     </div>
                 </div>
-                <!-- Step 2 -->
                 <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-300 protocol-item">
                     <span class="font-mono text-gray-600 text-sm pt-1">02</span>
                     <div>
@@ -296,7 +285,6 @@
                         <p class="font-mono text-gray-400 text-xs md:text-sm">Your selection builds an encrypted string in the cart.</p>
                     </div>
                 </div>
-                <!-- Step 3 -->
                 <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-400 protocol-item">
                     <span class="font-mono text-gray-600 text-sm pt-1">03</span>
                     <div>
@@ -304,7 +292,6 @@
                         <p class="font-mono text-gray-400 text-xs md:text-sm">Copy the code. Send it to <span class="text-white">@smoc_co</span>. No extra text.</p>
                     </div>
                 </div>
-                <!-- Step 4 -->
                 <div class="flex gap-6 opacity-0 translate-y-10 transition-all duration-700 delay-500 protocol-item">
                     <span class="font-mono text-gray-600 text-sm pt-1">04</span>
                     <div>
@@ -312,7 +299,6 @@
                         <p class="font-mono text-gray-400 text-xs md:text-sm">We verify, send payment details, then move the package.</p>
                     </div>
                 </div>
-                
                 <div class="opacity-0 translate-y-10 transition-all duration-700 delay-700 protocol-item pt-8 border-t border-white/5">
                     <p class="font-mono text-[10px] text-gray-600 uppercase tracking-wider">Split shipments may occur. Read terms before execution.</p>
                 </div>
@@ -329,35 +315,27 @@
             </div>
             <div class="flex gap-6">
                 <a href="#" class="text-gray-400 hover:text-white text-sm tracking-wide">INSTAGRAM</a>
-                <!-- Updated Terms Trigger -->
                 <button onclick="toggleTerms()" class="text-gray-400 hover:text-white text-sm tracking-wide uppercase">Terms & Conditions</button>
                 <a href="#" class="text-gray-400 hover:text-white text-sm tracking-wide">RETURN POLICY</a>
             </div>
         </div>
     </footer>
 
-    <!-- Cart / Code Generator Modal -->
+    <!-- Cart Modal -->
     <div id="cart-modal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleCart()"></div>
         <div class="absolute right-0 top-0 h-full w-full md:w-[500px] bg-[#0a0a0a] border-l border-white/10 shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-full" id="cart-panel">
-            
-            <!-- Cart Header -->
             <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#0a0a0a]">
                 <h2 class="brand-font text-2xl tracking-widest">SELECTION</h2>
                 <button onclick="toggleCart()" class="text-gray-400 hover:text-white">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
-
-            <!-- Cart Items List -->
             <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-                <!-- Cart items injected here -->
                 <div class="text-center text-gray-600 mt-20 font-mono text-sm">
                     SELECTION EMPTY.<br>INITIATE BROWSING.
                 </div>
             </div>
-
-            <!-- Code Generation Area -->
             <div class="p-6 bg-[#050505] border-t border-white/10">
                 <div id="checkout-actions" class="hidden">
                     <div class="mb-4">
@@ -366,9 +344,7 @@
                             <input type="text" id="order-code-input" readonly class="w-full bg-[#111] border border-white/20 text-green-500 font-mono text-sm p-3 focus:outline-none focus:border-white/50 rounded-sm">
                         </div>
                     </div>
-                    
                     <div class="grid grid-cols-2 gap-3">
-                        <!-- Fix 3: Passed 'this' to onclick -->
                         <button onclick="copyCode(this)" class="py-3 border border-white/30 text-white font-bold text-sm hover:bg-white/10 tracking-wider">
                             COPY CODE
                         </button>
@@ -384,137 +360,184 @@
         </div>
     </div>
 
-    <!-- Terms & Conditions Modal -->
+    <!-- Terms Modal -->
     <div id="terms-modal" class="fixed inset-0 z-[70] hidden">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="toggleTerms()"></div>
         <div class="absolute bottom-0 left-0 right-0 h-[85vh] bg-[#0a0a0a] border-t border-white/10 shadow-2xl flex flex-col transform transition-transform duration-500 translate-y-full rounded-t-xl overflow-hidden" id="terms-panel">
-            
-            <!-- Terms Header -->
             <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#0a0a0a] shrink-0">
                 <div>
                     <h2 class="brand-font text-2xl tracking-widest text-white">TERMS & CONDITIONS</h2>
                     <p class="font-mono text-[10px] text-gray-500 uppercase mt-1">Last Updated: 09 Dec 2025 | Jurisdiction: India</p>
                 </div>
                 <button onclick="toggleTerms()" class="text-gray-400 hover:text-white px-4 py-2 border border-white/20 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-colors">
-                    CLOSE PROTOCOL
+                    CLOSE
                 </button>
             </div>
-
-            <!-- Terms Content -->
             <div class="flex-1 overflow-y-auto p-6 md:p-12 space-y-10 text-gray-300 font-mono text-sm leading-relaxed max-w-4xl mx-auto w-full">
-                
-                <!-- Section 1 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">1. BUSINESS MODEL NOTICE</h3>
-                    <p class="text-gray-400">SMOC is a made-on-demand and reseller-linked brand.<br>Orders may ship separately depending on product source.</p>
-                </div>
-
-                <!-- Section 2 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">2. ORDERING PROTOCOL</h3>
-                    <p class="text-gray-400">Orders are initiated exclusively via Instagram DM with a Cold Code.<br>
-                    - We may accept or refuse any order before payment.<br>
-                    - No contract exists until payment is confirmed.</p>
-                </div>
-
-                <!-- Section 3 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">3. PRICING & PAYMENT</h3>
-                    <p class="text-gray-400">Prices may change at any time before confirmation.<br>
-                    Payment must be completed within the timeframe provided.<br>
-                    Once paid → order is locked.</p>
-                </div>
-
-                <!-- Section 4 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">4. SHIPPING</h3>
-                    <p class="text-gray-400">Delivery timelines are estimates only.<br>
-                    Delays outside our control do not qualify for refunds.<br>
-                    Risk transfers to customer once handed to courier.</p>
-                </div>
-
-                <!-- Section 5 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">5. PRODUCT VARIATIONS</h3>
-                    <p class="text-gray-400">Due to multiple suppliers and batch variation:<br>
-                    - Color/finish differences<br>
-                    - Print scale differences<br>
-                    - Minor measurement variance<br>
-                    These are not considered defects.</p>
-                </div>
-
-                <!-- Section 6 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">6. STRICT NO-RETURN POLICY</h3>
-                    <p class="text-gray-400">We do not accept returns for:<br>
-                    - Size or fit issues<br>
-                    - Change of mind<br>
-                    - Style preference<br>
-                    - Delays in shipping<br>
-                    - Normal wear or plating change</p>
-                    <p class="text-gray-400 mt-2">Only exception required by law:<br>
-                    - Wrong item received<br>
-                    - Proven manufacturing defect reported within 24 hours (With full unboxing video as proof)</p>
-                    <p class="text-white mt-2">If approved → replacement only. Refunds are not offered.</p>
-                </div>
-
-                <!-- Section 7 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">7. EXCHANGES</h3>
-                    <p class="text-gray-400">Not provided. Each order is final once confirmed.</p>
-                </div>
-
-                <!-- Section 8 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">8. PRODUCT CARE RESPONSIBILITY</h3>
-                    <p class="text-gray-400">Customer must maintain chains and metal wear properly.<br>
-                    Damage from use is not covered.</p>
-                </div>
-
-                <!-- Section 9 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">9. CONDUCT</h3>
-                    <p class="text-gray-400">Abusive behavior towards our support results in refusal of service.</p>
-                </div>
-
-                <!-- Section 10 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">10. PRIVACY</h3>
-                    <p class="text-gray-400">We only use your DM details to process and ship orders.<br>
-                    No data is sold.</p>
-                </div>
-
-                <!-- Section 11 -->
-                <div>
-                    <h3 class="brand-font text-lg text-white mb-2">11. POLICY CHANGES</h3>
-                    <p class="text-gray-400">Terms may be updated any time.<br>
-                    The version active at payment confirmation applies.</p>
-                </div>
-
-                <div class="pt-8 border-t border-white/10 text-center">
-                    <p class="text-xs text-gray-600 uppercase">SMOC OPERATIONS © 2025</p>
-                </div>
+                <div><h3 class="brand-font text-lg text-white mb-2">1. BUSINESS MODEL NOTICE</h3><p class="text-gray-400">SMOC is a made-on-demand and reseller-linked brand. Orders may ship separately.</p></div>
+                <div><h3 class="brand-font text-lg text-white mb-2">2. ORDERING PROTOCOL</h3><p class="text-gray-400">Orders via Instagram DM with Cold Code. No contract until payment.</p></div>
+                <div><h3 class="brand-font text-lg text-white mb-2">3. PRICING & PAYMENT</h3><p class="text-gray-400">Prices may change. Payment must be completed provided timeframe. Once paid → order locked.</p></div>
+                <div><h3 class="brand-font text-lg text-white mb-2">4. SHIPPING</h3><p class="text-gray-400">Timelines are estimates. Risk transfers once handed to courier.</p></div>
+                <div><h3 class="brand-font text-lg text-white mb-2">6. STRICT NO-RETURN POLICY</h3><p class="text-gray-400">No returns for size/fit/change of mind. Refund only for proven defect within 24hr with video.</p></div>
+                <div class="pt-8 border-t border-white/10 text-center"><p class="text-xs text-gray-600 uppercase">SMOC OPERATIONS © 2025</p></div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white text-black px-6 py-3 text-sm font-bold tracking-widest opacity-0 pointer-events-none transition-opacity duration-300 z-[70]">
         ITEM ADDED
     </div>
 
-    <!-- Unicorn Studio Script -->
-    <script type="text/javascript">
-        !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.2/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
-    </script>
-
     <script>
-        // --- 1. CONFIG & DATA ---
-        
-        // Correct Instagram Handle
+        // --- 1. WEBGL "LIQUID DARK" SHADER ENGINE ---
+        function initHeroAnimation() {
+            const canvas = document.getElementById('hero-canvas');
+            if(!canvas) return;
+            const gl = canvas.getContext('webgl');
+            if (!gl) return; // WebGL not supported
+
+            // Shader Sources
+            const vsSource = `
+                attribute vec2 position;
+                void main() {
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // The Liquid Effect Shader
+            const fsSource = `
+                precision highp float;
+                uniform vec2 u_resolution;
+                uniform float u_time;
+                uniform vec2 u_mouse;
+
+                void main() {
+                    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                    float aspect = u_resolution.x / u_resolution.y;
+                    uv.x *= aspect;
+                    
+                    // Mouse Warp Calculation
+                    vec2 mouse = u_mouse / u_resolution.xy;
+                    mouse.x *= aspect;
+                    // Invert mouse Y for WebGL coords
+                    mouse.y = 1.0 - mouse.y; 
+                    
+                    float dist = distance(uv, mouse);
+                    // Creates a "lens" ripple effect around mouse
+                    float mouse_influence = smoothstep(0.4, 0.0, dist) * 0.5;
+
+                    vec2 p = uv * 3.0; // Scale pattern
+                    float t = u_time * 0.2; // Speed
+                    
+                    // Fluid Domain Warping Logic
+                    for(int i = 1; i < 4; i++) {
+                        float fi = float(i);
+                        p += vec2(
+                            0.7 / fi * sin(fi * p.y + t + 0.3 * fi) + 0.8,
+                            0.4 / fi * cos(fi * p.x + t + 0.3 * (fi + 10.0)) - 0.3
+                        ) + (mouse_influence * 0.5);
+                    }
+                    
+                    // Color Mapping
+                    float intensity = sin(p.x + p.y) * 0.5 + 0.5;
+                    
+                    // Dark, Cold Palette: Black -> Deep Grey -> Subtle Silver
+                    vec3 col = mix(vec3(0.02, 0.02, 0.02), vec3(0.1, 0.12, 0.15), intensity);
+                    col += smoothstep(0.95, 1.0, intensity) * 0.3; // Specular highlights
+                    
+                    gl_FragColor = vec4(col, 1.0);
+                }
+            `;
+
+            // Compile Shader Helper
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error(gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+
+            // Buffers
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1.0, -1.0,
+                 1.0, -1.0,
+                -1.0,  1.0,
+                -1.0,  1.0,
+                 1.0, -1.0,
+                 1.0,  1.0,
+            ]), gl.STATIC_DRAW);
+
+            // Locations
+            const positionLocation = gl.getAttribLocation(program, "position");
+            const timeLocation = gl.getUniformLocation(program, "u_time");
+            const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            const mouseLocation = gl.getUniformLocation(program, "u_mouse");
+
+            // Mouse State
+            let mouseX = 0, mouseY = 0;
+            // Add subtle drift so it's never fully static
+            let targetMouseX = 0, targetMouseY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                targetMouseX = e.clientX;
+                targetMouseY = e.clientY;
+            });
+            
+            // Touch support
+            document.addEventListener('touchmove', (e) => {
+                targetMouseX = e.touches[0].clientX;
+                targetMouseY = e.touches[0].clientY;
+            });
+
+            // Loop
+            function render(time) {
+                time *= 0.001; // seconds
+
+                // Smooth mouse interpolation
+                mouseX += (targetMouseX - mouseX) * 0.05;
+                mouseY += (targetMouseY - mouseY) * 0.05;
+
+                // Resize
+                if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    gl.viewport(0, 0, canvas.width, canvas.height);
+                }
+
+                gl.useProgram(program);
+                gl.enableVertexAttribArray(positionLocation);
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+                gl.uniform1f(timeLocation, time);
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.uniform2f(mouseLocation, mouseX, mouseY);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        }
+
+        // --- 2. CONFIG & LOGIC ---
         const IG_USERNAME = "smoc_co"; 
-        
-        // Generating Product Data (as requested: 5 tees, 8 chains, 5 rings, 6 caps)
         const products = [];
         
         function createProducts(category, count, namePrefix, price, hasSize) {
@@ -525,28 +548,19 @@
                     category: category,
                     name: `${namePrefix} ${idNum}`,
                     price: price,
-                    image: `https://placehold.co/400x500/111/fff?text=${category}-${idNum}`, // Placeholder
+                    image: `https://placehold.co/400x500/111/fff?text=${category}-${idNum}`,
                     hasSize: hasSize
                 });
             }
         }
 
-        // Fix 5: Updated Prices to Realistic Range (₹499 - ₹799)
-        // Fix 1: Rings now have hasSize: false to trigger the specific ring logic
         createProducts('TS', 5, 'ICE TEE', 699, true);   
         createProducts('CH', 8, 'LINK CHAIN', 799, false); 
         createProducts('RG', 5, 'CHROME RING', 499, false);  
         createProducts('CP', 6, 'STEALTH CAP', 599, false); 
 
-        // --- 2. STATE MANAGEMENT ---
         let cart = [];
-
-        // --- 3. RENDER FUNCTIONS ---
-        
-        // Initialize Icons
         lucide.createIcons();
-
-        // Render Grid
         const grid = document.getElementById('product-grid');
         
         function renderProducts(filter = 'all') {
@@ -558,47 +572,46 @@
 
             filtered.forEach(product => {
                 const card = document.createElement('div');
-                card.className = 'product-card group relative bg-[#0a0a0a] border border-white/5';
+                card.className = 'product-card group relative bg-[#0a0a0a]';
                 
-                // Size selector HTML if needed
                 let sizeHtml = '';
                 if(product.hasSize) {
-                    // Standard sizes for Tees/Caps if applicable
                     sizeHtml = `
-                        <select id="size-${product.id}" class="bg-black text-white text-xs border border-white/30 p-1 mb-2 outline-none w-full">
-                            <option value="S">SIZE: S</option>
-                            <option value="M" selected>SIZE: M</option>
-                            <option value="L">SIZE: L</option>
-                            <option value="XL">SIZE: XL</option>
+                        <select id="size-${product.id}" class="custom-select w-full bg-[#111] text-gray-400 text-[10px] p-2 outline-none uppercase tracking-wider mb-1 cursor-pointer hover:bg-[#1a1a1a]">
+                            <option value="S">SZ: S</option>
+                            <option value="M" selected>SZ: M</option>
+                            <option value="L">SZ: L</option>
+                            <option value="XL">SZ: XL</option>
                         </select>
                     `;
                 } else if (product.category === 'RG') {
-                    // Fix 1: Specific Ring Sizes now trigger because hasSize is false
                      sizeHtml = `
-                        <select id="size-${product.id}" class="bg-black text-white text-xs border border-white/30 p-1 mb-2 outline-none w-full">
-                            <option value="6">SIZE: 6</option>
-                            <option value="7">SIZE: 7</option>
-                            <option value="8" selected>SIZE: 8</option>
-                            <option value="9">SIZE: 9</option>
+                        <select id="size-${product.id}" class="custom-select w-full bg-[#111] text-gray-400 text-[10px] p-2 outline-none uppercase tracking-wider mb-1 cursor-pointer hover:bg-[#1a1a1a]">
+                            <option value="6">SZ: 6</option>
+                            <option value="7">SZ: 7</option>
+                            <option value="8" selected>SZ: 8</option>
+                            <option value="9">SZ: 9</option>
                         </select>
                     `;
+                } else {
+                    sizeHtml = `<div class="w-full bg-[#111] text-gray-500 text-[10px] p-2 uppercase tracking-wider mb-1 text-center">ONE SIZE</div>`;
                 }
 
                 card.innerHTML = `
-                    <div class="aspect-[4/5] overflow-hidden bg-[#111] relative">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0">
-                        <div class="absolute top-2 right-2 bg-black/80 px-2 py-1 text-[10px] font-mono border border-white/20">
+                    <div class="aspect-[3/4] overflow-hidden bg-[#111] relative mb-2">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover opacity-90 transition-opacity duration-300">
+                        <div class="absolute top-1 right-1 bg-black/60 px-1.5 py-0.5 text-[8px] font-mono border border-white/10 text-gray-300">
                             ${product.id}
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="brand-font text-lg leading-none">${product.name}</h3>
-                            <span class="font-mono text-sm text-gray-400">₹${product.price}</span>
+                    <div class="px-1">
+                        <div class="flex justify-between items-baseline mb-2">
+                            <h3 class="brand-font text-sm md:text-lg leading-none tracking-tight truncate pr-2">${product.name}</h3>
+                            <span class="font-mono text-xs md:text-sm text-gray-400 whitespace-nowrap">₹${product.price}</span>
                         </div>
                         ${sizeHtml}
-                        <button onclick="addToCart('${product.id}')" class="w-full mt-2 py-3 bg-white/5 border border-white/10 hover:bg-white hover:text-black transition-colors text-xs font-bold tracking-widest uppercase">
-                            Add to Selection
+                        <button onclick="addToCart('${product.id}')" class="w-full py-2 bg-white text-black text-[10px] md:text-xs font-bold tracking-widest uppercase hover:bg-gray-300 transition-colors">
+                            ADD +
                         </button>
                     </div>
                 `;
@@ -606,14 +619,12 @@
             });
         }
 
-        // Render Cart
         function renderCart() {
             const cartContainer = document.getElementById('cart-items');
             const cartCount = document.getElementById('cart-count');
             const checkoutActions = document.getElementById('checkout-actions');
             const orderInput = document.getElementById('order-code-input');
 
-            // Update Badge
             if(cart.length > 0) {
                 cartCount.innerText = cart.length;
                 cartCount.classList.remove('opacity-0');
@@ -621,7 +632,6 @@
                 cartCount.classList.add('opacity-0');
             }
 
-            // Render Items
             if (cart.length === 0) {
                 cartContainer.innerHTML = `
                      <div class="text-center text-gray-600 mt-20 font-mono text-sm">
@@ -635,7 +645,6 @@
             checkoutActions.classList.remove('hidden');
             cartContainer.innerHTML = '';
             
-            // Build the string: "TS-01:M, CH-02, RG-01:8"
             let codeParts = [];
 
             cart.forEach((item, index) => {
@@ -652,7 +661,7 @@
                          <div class="w-12 h-12 bg-gray-800 bg-cover" style="background-image: url('${item.image}')"></div>
                          <div>
                             <div class="brand-font text-sm">${item.name}</div>
-                            <div class="font-mono text-xs text-gray-500">${item.size ? 'SIZE: '+item.size : 'STD'}</div>
+                            <div class="font-mono text-xs text-gray-500">${item.size ? 'SZ: '+item.size : 'STD'}</div>
                          </div>
                     </div>
                     <button onclick="removeFromCart(${index})" class="text-gray-500 hover:text-red-500">
@@ -662,22 +671,14 @@
                 cartContainer.appendChild(div);
             });
 
-            // Update the Generated Code String
-            // Format: SMOC | ID:SIZE, ID, ID:SIZE | @USER
             const finalCode = `SMOC ORDER | ${codeParts.join(' + ')}`;
             orderInput.value = finalCode;
-            
-            // Re-init icons for new elements
             lucide.createIcons();
         }
 
-        // --- 4. INTERACTIONS ---
-
-        // Fix 2: Updated Filter Logic using data-category
         function filterProducts(category) {
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 const btnCat = btn.getAttribute('data-category');
-                // Active state check
                 if (btnCat === category) {
                      btn.classList.add('bg-white', 'text-black');
                      btn.classList.remove('bg-transparent', 'text-gray-400');
@@ -692,19 +693,11 @@
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             let size = null;
-            
-            // Check for size selector
             const sizeSelector = document.getElementById(`size-${productId}`);
             if(sizeSelector) {
                 size = sizeSelector.value;
             }
-
-            cart.push({
-                ...product,
-                size: size,
-                cartId: Date.now() // Unique ID for removal
-            });
-
+            cart.push({ ...product, size: size, cartId: Date.now() });
             renderCart();
             showToast(`ADDED: ${product.id}`);
         }
@@ -717,36 +710,24 @@
         function toggleCart() {
             const modal = document.getElementById('cart-modal');
             const panel = document.getElementById('cart-panel');
-            
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
-                // Small timeout to allow transition to render
-                setTimeout(() => {
-                    panel.classList.remove('translate-x-full');
-                }, 10);
+                setTimeout(() => panel.classList.remove('translate-x-full'), 10);
             } else {
                 panel.classList.add('translate-x-full');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
+                setTimeout(() => modal.classList.add('hidden'), 300);
             }
         }
 
         function toggleTerms() {
             const modal = document.getElementById('terms-modal');
             const panel = document.getElementById('terms-panel');
-            
             if (modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
-                // Small timeout to allow transition to render
-                setTimeout(() => {
-                    panel.classList.remove('translate-y-full');
-                }, 10);
+                setTimeout(() => panel.classList.remove('translate-y-full'), 10);
             } else {
                 panel.classList.add('translate-y-full');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 500);
+                setTimeout(() => modal.classList.add('hidden'), 500);
             }
         }
 
@@ -754,24 +735,17 @@
             const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.style.opacity = '1';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-            }, 2000);
+            setTimeout(() => toast.style.opacity = '0', 2000);
         }
 
-        // --- 5. CHECKOUT LOGIC ---
-
-        // Fix 3: Updated to accept 'buttonEl' (this) instead of relying on global event
         function copyCode(buttonEl) {
             const codeInput = document.getElementById('order-code-input');
             codeInput.select();
-            codeInput.setSelectionRange(0, 99999); // Mobile
+            codeInput.setSelectionRange(0, 99999); 
             navigator.clipboard.writeText(codeInput.value);
-            
             const originalText = buttonEl.innerText;
             buttonEl.innerText = "COPIED!";
             buttonEl.classList.add('bg-green-500', 'border-green-500');
-            
             setTimeout(() => {
                 buttonEl.innerText = originalText;
                 buttonEl.classList.remove('bg-green-500', 'border-green-500');
@@ -780,37 +754,28 @@
 
         function openInstagram() {
             const code = document.getElementById('order-code-input').value;
-            // Trying to copy before opening
             navigator.clipboard.writeText(code).then(() => {
-                // Determine URL based on device (Mobile Deep Link vs Web)
                 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
                 const url = isMobile 
-                    ? `instagram://user?username=${IG_USERNAME}` // Tries to open app profile
-                    : `https://ig.me/m/${IG_USERNAME}`; // Direct message link web
-                
+                    ? `instagram://user?username=${IG_USERNAME}` 
+                    : `https://ig.me/m/${IG_USERNAME}`; 
                 window.open(url, '_blank');
             });
         }
 
         // --- INIT ---
         renderProducts();
+        initHeroAnimation(); // Start the lightweight animation
         
-        // Add scroll animation observer for Product Grid, Gallery AND Protocol Items
-        const observerOptions = { threshold: 0.2 }; // Trigger when 20% visible
-        
+        const observerOptions = { threshold: 0.2 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Standard fade-up
                     entry.target.classList.add('opacity-100', 'translate-y-0');
                     entry.target.classList.remove('opacity-0', 'translate-y-10');
-                    
-                    // Specific logic for Gallery Spotlights
                     if (entry.target.classList.contains('gallery-item')) {
-                        // Find child elements to animate
                         const spotlight = entry.target.querySelector('.spotlight');
                         const content = entry.target.querySelector('.item-content');
-                        
                         if (spotlight) spotlight.classList.remove('opacity-0');
                         if (content) {
                             content.classList.remove('opacity-0', 'translate-y-10');
@@ -818,7 +783,6 @@
                         }
                     }
                 } else {
-                    // Optional: Fade out when leaving viewport for "Lens" effect
                     if (entry.target.classList.contains('gallery-item')) {
                          const spotlight = entry.target.querySelector('.spotlight');
                          if(spotlight) spotlight.classList.add('opacity-0');
@@ -827,9 +791,7 @@
             });
         }, observerOptions);
 
-        // Observe Gallery Items and Protocol Items
         document.querySelectorAll('.gallery-item, .protocol-item').forEach(item => observer.observe(item));
-
     </script>
 </body>
 </html>
